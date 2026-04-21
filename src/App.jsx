@@ -117,15 +117,18 @@ export default function DashboardSolace() {
   const [astronautaSelezionato, setAstronautaSelezionato] = useState(1);
   const [showSplash, setShowSplash] = useState(true);
   const [splashPhase, setSplashPhase] = useState(0);
+  const [splashExit, setSplashExit] = useState(false);
   const [loadPct, setLoadPct] = useState(0);
 
   useEffect(() => {
-    const t1 = setTimeout(() => setSplashPhase(1), 200);
-    const t2 = setTimeout(() => setSplashPhase(2), 900);
-    const t3 = setTimeout(() => setSplashPhase(3), 1600);
-    const t4 = setTimeout(() => setShowSplash(false), 3200);
-    const iv = setInterval(() => setLoadPct(p => Math.min(p + Math.random() * 28, 100)), 250);
-    return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); clearTimeout(t4); clearInterval(iv); };
+    const t1 = setTimeout(() => setSplashPhase(1), 300);   // genesis dot appears
+    const t2 = setTimeout(() => setSplashPhase(2), 780);   // orbital expand + shockwave
+    const t3 = setTimeout(() => setSplashPhase(3), 1750);  // letter-by-letter title
+    const t4 = setTimeout(() => setSplashPhase(4), 3000);  // scan line sweep
+    const t5 = setTimeout(() => setSplashExit(true), 4100); // elegant fade out
+    const t6 = setTimeout(() => setShowSplash(false), 5200); // remove from DOM
+    const iv = setInterval(() => setLoadPct(p => Math.min(p + Math.random() * 10 + 2, 100)), 175);
+    return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); clearTimeout(t4); clearTimeout(t5); clearTimeout(t6); clearInterval(iv); };
   }, []);
 
   const ASTRONAUTI = [
@@ -170,94 +173,201 @@ export default function DashboardSolace() {
 
   if (showSplash) {
     return (
-      <div className="fixed inset-0 bg-black flex items-center justify-center z-50 overflow-hidden">
+      <div
+        className="fixed inset-0 bg-black flex items-center justify-center z-50 overflow-hidden"
+        style={{
+          opacity: splashExit ? 0 : 1,
+          transition: splashExit ? "opacity 1.1s cubic-bezier(0.4,0,1,1)" : "none",
+          pointerEvents: splashExit ? "none" : "auto",
+        }}
+      >
         <style>{`
-          @keyframes orbit1 { 0% { transform: rotate(0deg) translateX(90px) rotate(0deg); } 100% { transform: rotate(360deg) translateX(90px) rotate(-360deg); } }
-          @keyframes orbit2 { 0% { transform: rotate(120deg) translateX(70px) rotate(-120deg); } 100% { transform: rotate(480deg) translateX(70px) rotate(-480deg); } }
-          @keyframes orbit3 { 0% { transform: rotate(240deg) translateX(110px) rotate(-240deg); } 100% { transform: rotate(600deg) translateX(110px) rotate(-600deg); } }
-          @keyframes corePulse { 0%,100% { transform: scale(1); filter: drop-shadow(0 0 30px rgba(56,189,248,0.4)); } 50% { transform: scale(1.15); filter: drop-shadow(0 0 60px rgba(56,189,248,0.7)); } }
-          @keyframes ringExpand { 0% { transform: scale(0); opacity:0; } 50% { opacity:0.3; } 100% { transform: scale(2.5); opacity:0; } }
-          @keyframes fadeBlur { 0% { opacity:0; filter:blur(20px); transform:translateY(20px); } 100% { opacity:1; filter:blur(0); transform:translateY(0); } }
-          @keyframes subtitleSlide { 0% { opacity:0; letter-spacing:0.8em; } 100% { opacity:1; letter-spacing:0.35em; } }
-          .orbit1 { animation: orbit1 8s linear infinite; }
-          .orbit2 { animation: orbit2 12s linear infinite; }
-          .orbit3 { animation: orbit3 6s linear infinite; }
-          .core-pulse { animation: corePulse 2s ease-in-out infinite; }
-          .ring-expand { animation: ringExpand 3s ease-out infinite; }
+          @keyframes orbit1 { from { transform: rotate(0deg) translateX(90px) rotate(0deg); } to { transform: rotate(360deg) translateX(90px) rotate(-360deg); } }
+          @keyframes orbit2 { from { transform: rotate(120deg) translateX(68px) rotate(-120deg); } to { transform: rotate(480deg) translateX(68px) rotate(-480deg); } }
+          @keyframes orbit3 { from { transform: rotate(240deg) translateX(110px) rotate(-240deg); } to { transform: rotate(600deg) translateX(110px) rotate(-600deg); } }
+          @keyframes corePulse { 0%,100% { box-shadow: 0 0 22px 5px rgba(34,211,238,0.35), 0 0 80px 16px rgba(34,211,238,0.1); } 50% { box-shadow: 0 0 44px 12px rgba(34,211,238,0.6), 0 0 130px 28px rgba(34,211,238,0.18); } }
+          @keyframes shockwave { 0% { transform: scale(0.9); opacity: 0.75; } 100% { transform: scale(5.5); opacity: 0; } }
+          @keyframes scanSweep { 0% { top: -3px; opacity: 0; } 8% { opacity: 1; } 92% { opacity: 1; } 100% { top: calc(100% + 3px); opacity: 0; } }
+          @keyframes auroraBreath { 0%,100% { opacity: 0.65; } 50% { opacity: 1; } }
+          @keyframes genesisDot { 0% { opacity:0; transform:scale(0); } 60% { opacity:1; transform:scale(1.3); } 100% { opacity:1; transform:scale(1); } }
+          .orbit-s1 { animation: orbit1 9s linear infinite; }
+          .orbit-s2 { animation: orbit2 14s linear infinite; }
+          .orbit-s3 { animation: orbit3 5.5s linear infinite; }
+          .core-glow { animation: corePulse 2.2s ease-in-out infinite; }
+          .aurora-breath { animation: auroraBreath 3.5s ease-in-out infinite; }
         `}</style>
 
-        <StarfieldCanvas count={200} />
+        <StarfieldCanvas count={220} />
 
-        <div className="relative z-10 flex flex-col items-center">
-          {/* Orbital system */}
-          <div className="relative w-64 h-64 mb-12" style={{ opacity: splashPhase >= 1 ? 1 : 0, transition: "opacity 0.8s" }}>
-            {/* Expanding rings */}
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="w-20 h-20 rounded-full border border-cyan-400/20 ring-expand" />
-            </div>
-            <div className="absolute inset-0 flex items-center justify-center" style={{ animationDelay: "1s" }}>
-              <div className="w-20 h-20 rounded-full border border-cyan-400/10 ring-expand" style={{ animationDelay: "1.5s" }} />
-            </div>
+        {/* Aurora — top */}
+        <div
+          className="absolute top-0 left-0 right-0 pointer-events-none aurora-breath"
+          style={{
+            height: "55%",
+            background: "radial-gradient(ellipse 65% 100% at 50% 0%, rgba(34,211,238,0.11) 0%, rgba(56,189,248,0.04) 45%, transparent 70%)",
+            opacity: splashPhase >= 2 ? 1 : 0,
+            transition: "opacity 2s ease",
+          }}
+        />
+        {/* Aurora — indigo bottom */}
+        <div
+          className="absolute bottom-0 left-0 right-0 pointer-events-none"
+          style={{
+            height: "40%",
+            background: "radial-gradient(ellipse 55% 100% at 50% 100%, rgba(99,102,241,0.07) 0%, transparent 70%)",
+            opacity: splashPhase >= 3 ? 1 : 0,
+            transition: "opacity 2.5s ease",
+          }}
+        />
 
-            {/* Orbit paths */}
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="w-44 h-44 rounded-full border border-white/[0.04]" />
-            </div>
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="w-36 h-36 rounded-full border border-white/[0.03]" />
-            </div>
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="w-56 h-56 rounded-full border border-white/[0.03]" />
-            </div>
+        <div className="relative z-10 flex flex-col items-center" style={{ perspective: "1200px" }}>
 
-            {/* Core */}
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="w-14 h-14 rounded-full bg-gradient-to-br from-cyan-400 to-sky-600 core-pulse" />
-            </div>
+          {/* ── Orbital system ── */}
+          <div className="relative flex items-center justify-center mb-16" style={{ width: 260, height: 260 }}>
 
-            {/* Orbiting satellites */}
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="orbit1">
-                <div className="w-3 h-3 rounded-full bg-cyan-300" style={{ boxShadow: "0 0 12px rgba(103,232,249,0.8)" }} />
+            {/* SVG orbit paths — draw themselves via stroke-dashoffset */}
+            <svg className="absolute inset-0" width="260" height="260" viewBox="0 0 260 260" style={{ overflow: "visible" }}>
+              {[
+                { r: 90,  circ: 565.5, stroke: "rgba(34,211,238,0.07)",  delay: 0   },
+                { r: 68,  circ: 427.3, stroke: "rgba(255,255,255,0.04)", delay: 160 },
+                { r: 110, circ: 691.2, stroke: "rgba(255,255,255,0.03)", delay: 80  },
+              ].map(({ r, circ, stroke, delay }, i) => (
+                <circle
+                  key={i}
+                  cx="130" cy="130" r={r}
+                  fill="none"
+                  stroke={stroke}
+                  strokeWidth="1"
+                  strokeDasharray={circ}
+                  strokeDashoffset={splashPhase >= 2 ? 0 : circ}
+                  style={{
+                    transition: `stroke-dashoffset 2.2s cubic-bezier(0.4,0,0.2,1) ${delay}ms`,
+                    transformOrigin: "130px 130px",
+                    transform: "rotate(-90deg)",
+                  }}
+                />
+              ))}
+            </svg>
+
+            {/* Shockwave rings — rendered only at phase 2 so animation auto-starts */}
+            {splashPhase >= 2 && [0, 280, 560].map((delay, i) => (
+              <div key={i} className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                <div style={{
+                  width: 44, height: 44,
+                  borderRadius: "50%",
+                  border: `1px solid rgba(34,211,238,${0.7 - i * 0.18})`,
+                  animation: `shockwave 1.7s ${delay}ms cubic-bezier(0,0,0.2,1) forwards`,
+                }} />
               </div>
-            </div>
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="orbit2">
-                <div className="w-2 h-2 rounded-full bg-sky-400" style={{ boxShadow: "0 0 10px rgba(56,189,248,0.7)" }} />
-              </div>
-            </div>
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="orbit3">
-                <div className="w-2.5 h-2.5 rounded-full bg-cyan-200" style={{ boxShadow: "0 0 14px rgba(165,243,252,0.7)" }} />
-              </div>
-            </div>
-          </div>
+            ))}
 
-          {/* Title */}
-          <h1
-            className="text-7xl sm:text-8xl font-extralight tracking-[0.15em] text-white mb-4"
-            style={{ opacity: splashPhase >= 2 ? 1 : 0, filter: splashPhase >= 2 ? "blur(0)" : "blur(20px)", transform: splashPhase >= 2 ? "translateY(0)" : "translateY(20px)", transition: "all 1s cubic-bezier(0.4,0,0.2,1)" }}
-          >
-            SOLACE
-          </h1>
-
-
-        </div>
-
-        {/* Progress */}
-        <div className="absolute bottom-16 left-1/2 -translate-x-1/2 w-56">
-          <div className="h-px bg-slate-800 rounded-full overflow-hidden">
+            {/* Core — starts as tiny dot, expands with spring at phase 2 */}
             <div
-              className="h-full rounded-full"
+              className={splashPhase >= 2 ? "core-glow" : ""}
               style={{
-                width: `${loadPct}%`,
-                background: "linear-gradient(90deg, transparent, #22d3ee, transparent)",
-                transition: "width 0.25s ease-out",
-                boxShadow: "0 0 12px rgba(34,211,238,0.5)",
+                width:  splashPhase >= 2 ? 52 : (splashPhase >= 1 ? 10 : 0),
+                height: splashPhase >= 2 ? 52 : (splashPhase >= 1 ? 10 : 0),
+                borderRadius: "50%",
+                background: "linear-gradient(135deg, #67e8f9 0%, #0ea5e9 55%, #6366f1 100%)",
+                opacity: splashPhase >= 1 ? 1 : 0,
+                transition: splashPhase >= 2
+                  ? "width 0.55s cubic-bezier(0.34,1.56,0.64,1), height 0.55s cubic-bezier(0.34,1.56,0.64,1)"
+                  : "width 0.4s ease, height 0.4s ease, opacity 0.45s ease",
+                flexShrink: 0,
               }}
             />
+
+            {/* Orbiting satellites */}
+            {splashPhase >= 2 && (
+              <>
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="orbit-s1">
+                    <div style={{ width: 10, height: 10, borderRadius: "50%", background: "#67e8f9", boxShadow: "0 0 18px 5px rgba(103,232,249,0.7)" }} />
+                  </div>
+                </div>
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="orbit-s2">
+                    <div style={{ width: 7, height: 7, borderRadius: "50%", background: "#38bdf8", boxShadow: "0 0 14px 4px rgba(56,189,248,0.6)" }} />
+                  </div>
+                </div>
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="orbit-s3">
+                    <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#c4b5fd", boxShadow: "0 0 16px 5px rgba(196,181,253,0.55)" }} />
+                  </div>
+                </div>
+              </>
+            )}
           </div>
-          <p className="text-center mt-3 text-xs text-slate-600 font-light tabular-nums">{Math.round(loadPct)}%</p>
+
+          {/* ── Title — each letter flips in with 3-D perspective ── */}
+          <div className="relative mb-8" style={{ perspective: "900px" }}>
+            <h1 className="text-7xl sm:text-8xl font-extralight text-white select-none flex" style={{ letterSpacing: "0.2em" }}>
+              {"SOLACE".split("").map((letter, i) => (
+                <span
+                  key={i}
+                  style={{
+                    display: "inline-block",
+                    opacity:   splashPhase >= 3 ? 1 : 0,
+                    transform: splashPhase >= 3 ? "translateY(0) rotateX(0deg)" : "translateY(50px) rotateX(-75deg)",
+                    filter:    splashPhase >= 3 ? "blur(0)" : "blur(8px)",
+                    transition: [
+                      `opacity   0.65s cubic-bezier(0.23,1,0.32,1) ${90 + i * 90}ms`,
+                      `transform 0.75s cubic-bezier(0.23,1,0.32,1) ${90 + i * 90}ms`,
+                      `filter    0.55s ease                         ${90 + i * 90}ms`,
+                    ].join(", "),
+                    transformOrigin: "bottom center",
+                  }}
+                >
+                  {letter}
+                </span>
+              ))}
+            </h1>
+
+            {/* Scan-line sweep — auto-plays the moment it's mounted at phase 4 */}
+            {splashPhase >= 4 && (
+              <div className="absolute inset-0 pointer-events-none" style={{ overflow: "hidden" }}>
+                <div style={{
+                  position: "absolute",
+                  left: "-8%", right: "-8%",
+                  height: 2,
+                  background: "linear-gradient(90deg, transparent 0%, rgba(34,211,238,0.65) 15%, rgba(255,255,255,0.95) 50%, rgba(34,211,238,0.65) 85%, transparent 100%)",
+                  boxShadow: "0 0 18px rgba(34,211,238,0.9), 0 0 45px rgba(34,211,238,0.25)",
+                  animation: "scanSweep 1.1s cubic-bezier(0.4,0,0.6,1) forwards",
+                }} />
+              </div>
+            )}
+          </div>
+
+          {/* Thin divider line that extends after scan */}
+          <div style={{
+            width: splashPhase >= 4 ? 88 : 0,
+            height: 1,
+            background: "linear-gradient(90deg, transparent, rgba(34,211,238,0.45), transparent)",
+            transition: "width 0.9s cubic-bezier(0.4,0,0.2,1) 0.25s",
+          }} />
+        </div>
+
+        {/* ── Progress ── */}
+        <div className="absolute bottom-12 left-1/2 -translate-x-1/2 w-44">
+          <div className="relative h-px rounded-full" style={{ background: "rgba(255,255,255,0.05)" }}>
+            <div style={{
+              position: "absolute",
+              top: 0, left: 0, bottom: 0,
+              width: `${loadPct}%`,
+              background: "linear-gradient(90deg, rgba(34,211,238,0.25), #22d3ee, rgba(255,255,255,0.85), #22d3ee, rgba(34,211,238,0.25))",
+              boxShadow: "0 0 8px rgba(34,211,238,0.7)",
+              transition: "width 0.3s ease-out",
+              borderRadius: 9999,
+            }} />
+          </div>
+          <p className="text-center mt-3 font-light tabular-nums" style={{
+            fontSize: 10,
+            letterSpacing: "0.28em",
+            color: loadPct >= 100 ? "rgba(34,211,238,0.75)" : "rgba(100,116,139,0.7)",
+            transition: "color 0.6s ease",
+          }}>
+            {loadPct >= 100 ? "PRONTO" : `${Math.round(loadPct)} %`}
+          </p>
         </div>
       </div>
     );
@@ -275,8 +385,9 @@ export default function DashboardSolace() {
   ];
 
   return (
-    <div className="w-full min-h-screen bg-black relative overflow-x-hidden" style={{ fontFamily: "'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" }}>
+    <div className="w-full min-h-screen bg-black relative overflow-x-hidden" style={{ fontFamily: "'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif", animation: "dashFadeIn 0.9s ease-out both" }}>
       <style>{`
+        @keyframes dashFadeIn { from { opacity:0; } to { opacity:1; } }
         @keyframes fadeUp { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
         @keyframes glowSoft { 0%,100% { box-shadow: 0 0 20px rgba(34,211,238,0.15); } 50% { box-shadow: 0 0 40px rgba(34,211,238,0.25); } }
         @keyframes shimmer { 0% { background-position: -200% center; } 100% { background-position: 200% center; } }
