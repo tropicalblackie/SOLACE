@@ -323,7 +323,7 @@ export default function DashboardSolace() {
           </div>
 
           {/* ── TAB BAR ── full-width, prominent */}
-          <div className="flex">
+          <div className="flex gap-4">
             {TABS.map((t, i) => (
               <button
                 key={t.id}
