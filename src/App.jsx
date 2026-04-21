@@ -241,12 +241,7 @@ export default function DashboardSolace() {
             SOLACE
           </h1>
 
-          <p
-            className="text-xs text-slate-400 tracking-[0.35em] font-light"
-            style={{ opacity: splashPhase >= 3 ? 1 : 0, letterSpacing: splashPhase >= 3 ? "0.35em" : "0.8em", transition: "all 0.8s cubic-bezier(0.4,0,0.2,1)" }}
-          >
-            MISSIONE SPAZIALE
-          </p>
+
         </div>
 
         {/* Progress */}
