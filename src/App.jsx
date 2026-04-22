@@ -134,8 +134,8 @@ export default function DashboardSolace() {
   const ASTRONAUTI = [
     { id: 1, nome: "Luca Marini", ruolo: "Comandante", stato: "Eccellente", fc: 72, pressione: "118/76", o2: 98, stress: 24, sonno: 6.2, energia: 85, ritmo: "Picco 14:30-18:00", muscoli: "Buono", immunita: "Forte" },
     { id: 2, nome: "Sofia Chen", ruolo: "Medico", stato: "Eccellente", fc: 68, pressione: "115/74", o2: 99, stress: 18, sonno: 7.1, energia: 92, ritmo: "Picco 05:30-09:30", muscoli: "Eccellente", immunita: "Eccellente" },
-    { id: 3, nome: "Marco Rossi", ruolo: "Ingegnere", stato: "Critico", fc: 88, pressione: "128/82", o2: 95, stress: 78, sonno: 4.8, energia: 28, ritmo: "Irregolare", muscoli: "Critico", immunita: "Soppresso" },
-    { id: 4, nome: "Elena Bianchi", ruolo: "Scienziato", stato: "Buono", fc: 74, pressione: "120/75", o2: 98, stress: 32, sonno: 6.8, energia: 78, ritmo: "Picco 14:00-17:30", muscoli: "Buono", immunita: "Buono" },
+    { id: 3, nome: "Diego Reyes", ruolo: "Ingegnere", stato: "Critico", fc: 88, pressione: "128/82", o2: 95, stress: 78, sonno: 4.8, energia: 28, ritmo: "Irregolare", muscoli: "Critico", immunita: "Soppresso" },
+    { id: 4, nome: "Nour Al-Masri", ruolo: "Scienziato", stato: "Buono", fc: 74, pressione: "120/75", o2: 98, stress: 32, sonno: 6.8, energia: 78, ritmo: "Picco 14:00-17:30", muscoli: "Buono", immunita: "Buono" },
   ];
 
   const HABITAT = {
@@ -150,13 +150,13 @@ export default function DashboardSolace() {
   };
 
   const AVVISI = [
-    { tipo: "critico", titolo: "Marco Rossi: Burnout Imminente", descrizione: "Stress critico 78%. Sonno 4.8h. Immunità soppresa. Intervento immediato.", azione: "Attivare Protocollo" },
+    { tipo: "critico", titolo: "Diego Reyes: Burnout Imminente", descrizione: "Stress critico 78%. Sonno 4.8h. Immunità soppresa. Intervento immediato.", azione: "Attivare Protocollo" },
     { tipo: "info", titolo: "Sofia Chen: Picco Performance", descrizione: "Condizioni ottimali. Finestra critica 05:30-09:30.", azione: "Assegnare Task" },
     { tipo: "warning", titolo: "Risorse Idriche", descrizione: "Osmosi inversa al 95%. Autonomia 12 giorni.", azione: "Ispezionare" },
   ];
 
   const RACCOMANDAZIONI = [
-    { tipo: "critico", text: "Marco Rossi: Riposo immediato 8h. Ridurre carico 60%. Meditazione 4h giornaliere." },
+    { tipo: "critico", text: "Diego Reyes: Riposo immediato 8h. Ridurre carico 60%. Meditazione 4h giornaliere." },
     { tipo: "info", text: "Sofia Chen al picco biologico. Operazioni critiche: 05:30-09:30." },
     { tipo: "warning", text: "Aumentare apporto calorico +300 kcal/giorno per attività EVA." },
     { tipo: "info", text: "Habitat nominale. Tutti i parametri in range. Aria eccellente." },
