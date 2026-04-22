@@ -323,19 +323,7 @@ export default function DashboardSolace() {
               ))}
             </h1>
 
-            {/* Scan-line sweep — auto-plays the moment it's mounted at phase 4 */}
-            {splashPhase >= 4 && (
-              <div className="absolute inset-0 pointer-events-none" style={{ overflow: "hidden" }}>
-                <div style={{
-                  position: "absolute",
-                  left: "-8%", right: "-8%",
-                  height: 2,
-                  background: "linear-gradient(90deg, transparent 0%, rgba(34,211,238,0.65) 15%, rgba(255,255,255,0.95) 50%, rgba(34,211,238,0.65) 85%, transparent 100%)",
-                  boxShadow: "0 0 18px rgba(34,211,238,0.9), 0 0 45px rgba(34,211,238,0.25)",
-                  animation: "scanSweep 1.1s cubic-bezier(0.4,0,0.6,1) forwards",
-                }} />
-              </div>
-            )}
+
           </div>
 
           {/* Thin divider line that extends after scan */}
@@ -363,10 +351,9 @@ export default function DashboardSolace() {
           <p className="text-center mt-3 font-light tabular-nums" style={{
             fontSize: 10,
             letterSpacing: "0.28em",
-            color: loadPct >= 100 ? "rgba(34,211,238,0.75)" : "rgba(100,116,139,0.7)",
-            transition: "color 0.6s ease",
+            color: "rgba(100,116,139,0.7)",
           }}>
-            {loadPct >= 100 ? "PRONTO" : `${Math.round(loadPct)} %`}
+            {Math.round(loadPct)} %
           </p>
         </div>
       </div>
